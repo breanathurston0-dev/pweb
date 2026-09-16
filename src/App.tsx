@@ -4137,6 +4137,25 @@ export default function App() {
                     <span className={`text-[10px] font-sans font-semibold ${auditActionFilter === "ARCHIVED_ONLY" ? "text-amber-100" : "text-amber-700 dark:text-amber-400"}`}>Archived</span>
                   </button>
 
+                  <span className="text-slate-300 dark:text-slate-700 font-mono text-[11px] font-bold">vs</span>
+
+                  {/* Critical Count Pill */}
+                  <button
+                    type="button"
+                    id="audit-summary-critical-count"
+                    onClick={() => setAuditActionFilter(auditActionFilter === "CRITICAL_ONLY" ? "ALL" : "CRITICAL_ONLY")}
+                    className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-mono font-bold border transition-all cursor-pointer ${
+                      auditActionFilter === "CRITICAL_ONLY"
+                        ? "bg-red-600 text-white border-red-700 shadow-xs"
+                        : "bg-red-50 text-red-800 border-red-200/80 hover:bg-red-100/80 dark:bg-red-950/50 dark:text-red-300 dark:border-red-800"
+                    }`}
+                    title={`Click to filter: ${auditSummaryStats.criticalCount} Critical logs`}
+                  >
+                    <span className={`w-2 h-2 rounded-full shadow-xs ${auditActionFilter === "CRITICAL_ONLY" ? "bg-white" : "bg-red-500"}`} />
+                    <span>{auditSummaryStats.criticalCount}</span>
+                    <span className={`text-[10px] font-sans font-semibold ${auditActionFilter === "CRITICAL_ONLY" ? "text-red-100" : "text-red-700 dark:text-red-400"}`}>Critical</span>
+                  </button>
+
                   {/* Visual ratio progress indicator */}
                   <div className="hidden sm:flex items-center gap-2 pl-1 border-l border-slate-200 dark:border-slate-800">
                     <div
@@ -4184,6 +4203,36 @@ export default function App() {
                 </div>
 
                 <div className="flex items-center gap-2 relative shrink-0 flex-wrap">
+                  {/* Critical Severity Filter Button */}
+                  <button
+                    id="audit-filter-critical-btn"
+                    type="button"
+                    aria-label="Filter audit log table to show Critical severity events only"
+                    onClick={() => setAuditActionFilter(auditActionFilter === "CRITICAL_ONLY" ? "ALL" : "CRITICAL_ONLY")}
+                    className={`flex items-center gap-1.5 text-[11px] font-bold px-3.5 py-2 rounded-2xl border transition-all cursor-pointer select-none ${
+                      auditActionFilter === "CRITICAL_ONLY"
+                        ? "bg-red-600 text-white border-red-700 shadow-xs ring-2 ring-red-300 dark:ring-red-900"
+                        : "bg-white hover:bg-red-50/80 text-red-700 border-slate-200 hover:border-red-200 dark:bg-slate-900 dark:text-red-400 dark:border-slate-800"
+                    }`}
+                    title={
+                      auditActionFilter === "CRITICAL_ONLY"
+                        ? "Showing Critical severity events only. Click to reset filter."
+                        : `Filter audit log table to show Critical severity events only (${auditSummaryStats.criticalCount} events)`
+                    }
+                  >
+                    <ShieldAlert className={`w-3.5 h-3.5 ${auditActionFilter === "CRITICAL_ONLY" ? "text-white" : "text-red-600 dark:text-red-400"}`} />
+                    <span className="whitespace-nowrap">Critical Severity Only</span>
+                    <span
+                      className={`text-[9px] font-mono font-extrabold px-1.5 py-0.5 rounded-full ${
+                        auditActionFilter === "CRITICAL_ONLY"
+                          ? "bg-white/25 text-white"
+                          : "bg-red-100 text-red-800 dark:bg-red-950 dark:text-red-300"
+                      }`}
+                    >
+                      {auditSummaryStats.criticalCount}
+                    </span>
+                  </button>
+
                   {/* Live Monitor Toggle */}
                   <button
                     id="audit-live-monitor-toggle"
@@ -4428,6 +4477,38 @@ export default function App() {
                       </button>
                     </span>
                   )}
+                  {auditActionFilter !== "ALL" && (
+                    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-[11px] font-medium border ${
+                      auditActionFilter === "CRITICAL_ONLY"
+                        ? "bg-red-50 text-red-800 border-red-200 dark:bg-red-950/50 dark:text-red-300 dark:border-red-800"
+                        : auditActionFilter === "ACTIVE_ONLY"
+                        ? "bg-blue-50 text-blue-800 border-blue-200 dark:bg-blue-950/50 dark:text-blue-300 dark:border-blue-800"
+                        : auditActionFilter === "ARCHIVED_ONLY"
+                        ? "bg-amber-50 text-amber-800 border-amber-200 dark:bg-amber-950/50 dark:text-amber-300 dark:border-amber-800"
+                        : "bg-slate-100 text-slate-800 border-slate-250 dark:bg-slate-800 dark:text-slate-200"
+                    }`}>
+                      <span>
+                        Severity / Filter:{" "}
+                        <strong className="font-mono font-bold">
+                          {auditActionFilter === "CRITICAL_ONLY"
+                            ? "Critical Only"
+                            : auditActionFilter === "ACTIVE_ONLY"
+                            ? "Active Only"
+                            : auditActionFilter === "ARCHIVED_ONLY"
+                            ? "Archived Only"
+                            : auditActionFilter}
+                        </strong>
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => setAuditActionFilter("ALL")}
+                        className="hover:text-slate-950 dark:hover:text-white cursor-pointer p-0.5"
+                        title="Clear filter"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    </span>
+                  )}
                 </div>
 
                 <div className="flex items-center gap-2 shrink-0 flex-wrap">
@@ -4460,6 +4541,20 @@ export default function App() {
                     >
                       <span className={`w-1.5 h-1.5 rounded-full ${auditActionFilter === "ARCHIVED_ONLY" ? "bg-white" : "bg-amber-500"}`} />
                       <span>Archived ({auditSummaryStats.archivedCount})</span>
+                    </button>
+                    <button
+                      type="button"
+                      id="filter-pill-critical"
+                      onClick={() => setAuditActionFilter(auditActionFilter === "CRITICAL_ONLY" ? "ALL" : "CRITICAL_ONLY")}
+                      className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-mono font-bold transition-all cursor-pointer ${
+                        auditActionFilter === "CRITICAL_ONLY"
+                          ? "bg-red-600 text-white shadow-xs"
+                          : "bg-red-50/80 text-red-700 hover:bg-red-100 dark:bg-red-950/50 dark:text-red-300"
+                      }`}
+                      title="Filter Critical logs only"
+                    >
+                      <span className={`w-1.5 h-1.5 rounded-full ${auditActionFilter === "CRITICAL_ONLY" ? "bg-white" : "bg-red-500"}`} />
+                      <span>Critical ({auditSummaryStats.criticalCount})</span>
                     </button>
                   </div>
 
