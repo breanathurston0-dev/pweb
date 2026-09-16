@@ -9,7 +9,7 @@ import {
   ArrowRight, Search, Video, Clock, Star, CheckCircle, DollarSign, Menu, X, 
   Shield, Heart, CreditCard, Lock, Settings, Activity, FileText, Check, Trash2, 
   Plus, ChevronDown, ChevronRight, ChevronUp, Copy, Code, Eye, Tv, Send, MessageSquare, MapPin, Phone, Mail, Book, RefreshCw, AlertCircle,
-  Sun, Moon, ShieldAlert, Info, Download, Archive, CheckSquare, FileSpreadsheet, Play
+  Sun, Moon, ShieldAlert, Info, Download, Archive, CheckSquare, FileSpreadsheet, Play, ExternalLink, QrCode
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 
@@ -20,6 +20,10 @@ import AIAssistant from "./components/AIAssistant.tsx";
 import VerificationModal from "./components/CertificationModal.tsx";
 import VideoPlayer from "./components/VideoPlayer.tsx";
 import proSanImage from "./assets/images/pro_san.jpg";
+
+export const ABA_PAYWAY_URL = "https://link.payway.com.kh/aba?id=18E2ED0EE307&code=461423&acc=002292898&dynamic=true";
+export const ABA_ACCOUNT_NO = "002292898";
+export const ABA_MERCHANT_CODE = "461423";
 
 interface AuditLogDetailsInfo {
   ids: { label: string; value: string; colorClass: string }[];
@@ -260,6 +264,7 @@ export default function App() {
   const [paymentGateway, setPaymentGateway] = useState("ABA Pay");
   const [checkoutError, setCheckoutError] = useState("");
   const [verificationFeedback, setVerificationFeedback] = useState("");
+  const [copiedAbaAccount, setCopiedAbaAccount] = useState(false);
 
   // Contact Message form states
   const [contactForm, setContactForm] = useState({ name: "", course: "General Question", msg: "" });
@@ -556,11 +561,16 @@ export default function App() {
   };
 
   // Setup payments checkout
-  const handleInitiateCheckout = async (courseId: string) => {
+  const handleInitiateCheckout = async (courseId: string, gatewayOverride?: string) => {
     if (!token) {
       setAuthMode("login");
       setShowAuthModal(true);
       return;
+    }
+
+    const gatewayToUse = gatewayOverride || paymentGateway;
+    if (gatewayOverride) {
+      setPaymentGateway(gatewayOverride);
     }
 
     try {
@@ -570,7 +580,7 @@ export default function App() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify({ courseId, gateway: paymentGateway })
+        body: JSON.stringify({ courseId, gateway: gatewayToUse })
       });
       const data = await res.json();
 
@@ -2052,11 +2062,25 @@ export default function App() {
                         <div className="border-t border-slate-100 pt-4 mt-auto flex items-center justify-between">
                           <span className="text-xs text-slate-400 font-bold font-mono">BY: {item.instructor}</span>
                           
-                          <div className="flex items-center gap-1.5">
-                            {hasDiscount && (
-                              <span className="text-slate-400 line-through text-xs font-mono font-bold">${item.price}</span>
-                            )}
-                            <span className="text-slate-950 font-extrabold text-md md:text-lg font-mono">${currentPrice}</span>
+                          <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-1.5">
+                              {hasDiscount && (
+                                <span className="text-slate-400 line-through text-xs font-mono font-bold">${item.price}</span>
+                              )}
+                              <span className="text-slate-950 font-extrabold text-md md:text-lg font-mono">${currentPrice}</span>
+                            </div>
+
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedCourseId(item.id);
+                                handleInitiateCheckout(item.id, "ABA Pay");
+                              }}
+                              className="bg-blue-600 hover:bg-blue-700 text-white text-[11px] font-bold px-2.5 py-1 rounded-lg transition-all shadow hover:shadow-md cursor-pointer flex items-center gap-1"
+                              title="Buy Now"
+                            >
+                              <span>{lang === "en" ? "Buy Now" : "ទិញឥឡូវ"}</span>
+                            </button>
                           </div>
                         </div>
                       </div>
@@ -2345,11 +2369,25 @@ export default function App() {
                         <div className="border-t border-slate-100 pt-4 mt-auto flex items-center justify-between">
                           <span className="text-xs text-slate-400 font-bold font-mono">BY: {item.instructor}</span>
                           
-                          <div className="flex items-center gap-1.5">
-                            {hasDiscount && (
-                              <span className="text-slate-400 line-through text-xs font-mono font-bold">${item.price}</span>
-                            )}
-                            <span className="text-slate-950 font-extrabold text-md md:text-lg font-mono">${currentPrice}</span>
+                          <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-1.5">
+                              {hasDiscount && (
+                                <span className="text-slate-400 line-through text-xs font-mono font-bold">${item.price}</span>
+                              )}
+                              <span className="text-slate-950 font-extrabold text-md md:text-lg font-mono">${currentPrice}</span>
+                            </div>
+
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedCourseId(item.id);
+                                handleInitiateCheckout(item.id, "ABA Pay");
+                              }}
+                              className="bg-blue-600 hover:bg-blue-700 text-white text-[11px] font-bold px-2.5 py-1 rounded-lg transition-all shadow hover:shadow-md cursor-pointer flex items-center gap-1"
+                              title="Buy Now"
+                            >
+                              <span>{lang === "en" ? "Buy Now" : "ទិញឥឡូវ"}</span>
+                            </button>
                           </div>
                         </div>
                       </div>
@@ -2541,13 +2579,56 @@ export default function App() {
                       </button>
                     </div>
                   ) : (
-                    <button
-                      id="buy-course-trigger"
-                      onClick={() => handleInitiateCheckout(selectedCourseDetail.id)}
-                      className="w-full bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-sm py-4 px-6 rounded-2xl shadow-lg hover:shadow-xl hover:scale-101 transition-all cursor-pointer"
-                    >
-                      {t("purchaseNeeded")}
-                    </button>
+                    <div className="space-y-3">
+                      {/* Direct Buy Now Link */}
+                      <a
+                        id="buy-now-aba-link"
+                        href={ABA_PAYWAY_URL}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={() => {
+                          if (token) {
+                            handleInitiateCheckout(selectedCourseDetail.id, "ABA Pay");
+                          }
+                        }}
+                        className="w-full bg-gradient-to-r from-[#002d56] via-[#00386b] to-[#00a2db] hover:from-[#001c36] hover:to-[#008bc0] text-white font-black text-sm py-4 px-6 rounded-2xl shadow-xl hover:shadow-2xl hover:scale-101 transition-all cursor-pointer flex items-center justify-center gap-2 border border-cyan-400/40 group text-center"
+                      >
+                        <CreditCard className="w-4 h-4 text-cyan-300 group-hover:scale-110 transition-transform" />
+                        <span className="tracking-wide">
+                          {lang === "en" ? "Buy Now" : "ទិញឥឡូវនេះ"}
+                        </span>
+                        <ExternalLink className="w-4 h-4 text-cyan-200 group-hover:translate-x-0.5 transition-transform" />
+                      </a>
+
+                      {/* Scan QR / Select other Domestic & International Payment Methods */}
+                      <button
+                        id="buy-course-trigger"
+                        onClick={() => handleInitiateCheckout(selectedCourseDetail.id)}
+                        className="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs py-3 px-4 rounded-xl border border-slate-200 hover:border-slate-300 transition-all cursor-pointer flex items-center justify-center gap-2"
+                      >
+                        <QrCode className="w-3.5 h-3.5 text-slate-600" />
+                        <span>{lang === "en" ? "Scan QR / Invoice Checkout" : "ស្កេន QR / វិក្កយបត្រទូទាត់"}</span>
+                      </button>
+
+                      {/* Fast ABA PayWay notice */}
+                      <div className="flex items-center justify-between text-[11px] text-slate-500 bg-slate-50 px-3 py-2 rounded-xl border border-slate-100 font-mono">
+                        <span className="flex items-center gap-1.5">
+                          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                          <span>ABA: <strong>{ABA_ACCOUNT_NO}</strong></span>
+                        </span>
+                        <button
+                          onClick={() => {
+                            navigator.clipboard.writeText(ABA_ACCOUNT_NO);
+                            setCopiedAbaAccount(true);
+                            setTimeout(() => setCopiedAbaAccount(false), 2000);
+                          }}
+                          className="text-blue-600 hover:text-blue-800 flex items-center gap-1 font-sans text-[10px] cursor-pointer"
+                        >
+                          {copiedAbaAccount ? <Check className="w-3 h-3 text-emerald-600" /> : <Copy className="w-3 h-3" />}
+                          <span>{copiedAbaAccount ? "Copied" : "Copy"}</span>
+                        </button>
+                      </div>
+                    </div>
                   )}
 
                   <div className="border-t border-slate-100 pt-4 space-y-3 text-xs leading-relaxed text-slate-500">
@@ -2791,7 +2872,7 @@ export default function App() {
               <div className="space-y-3">
                 <h3 className="font-extrabold text-slate-900 text-md">{lang === "en" ? "Domestic Merchant Ecosystem" : "ប្រព័ន្ធទូទាត់ទូទាំងប្រទេស"}</h3>
                 <p className="text-slate-600 leading-relaxed">
-                  Integrating multi-bank payment networks directly (including ABA PayWay, Wing Bank, Acleda QR, and international options Stripe or PayPal) guarantees that seamless student registration is always responsive and verified securely.
+                  Integrating multi-bank payment networks directly (including ABA Pay, Wing Bank, Acleda QR, and international options Stripe or PayPal) guarantees that seamless student registration is always responsive and verified securely.
                 </p>
               </div>
             </div>
@@ -2995,20 +3076,103 @@ export default function App() {
               </div>
 
               {/* Right interactive scan area */}
-              <div className="bg-white border border-slate-250 p-6 md:p-8 rounded-3xl shadow-xl space-y-6 text-center flex flex-col justify-center items-center">
-                <div className="space-y-2">
-                  <h3 className="font-extrabold text-slate-900 text-sm leading-snug">{paymentGateway} Integrated Scan</h3>
-                  <p className="text-slate-500 text-xs font-medium max-w-sm mx-auto leading-relaxed">{t("paySubtitle")}</p>
+              <div className="bg-white border border-slate-250 p-6 md:p-8 rounded-3xl shadow-xl space-y-5 text-center flex flex-col justify-center items-center">
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-center gap-2">
+                    {paymentGateway === "ABA Pay" && (
+                      <span className="bg-[#002d56] text-cyan-300 text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full border border-cyan-400/30">
+                        ABA Mobile Pay
+                      </span>
+                    )}
+                    <h3 className="font-extrabold text-slate-900 text-sm md:text-base leading-snug">
+                      {paymentGateway === "ABA Pay" ? "ABA Pay Direct Checkout" : `${paymentGateway} Integrated Scan`}
+                    </h3>
+                  </div>
+                  <p className="text-slate-500 text-xs font-medium max-w-sm mx-auto leading-relaxed">
+                    {paymentGateway === "ABA Pay" 
+                      ? (lang === "en" ? "Click 'Buy Now' to open ABA Mobile, or scan the KHQR code below." : "ចុច 'Buy Now' ដើម្បីបើក ABA Mobile ឬស្កេន KHQR ខាងក្រោម។")
+                      : t("paySubtitle")}
+                  </p>
                 </div>
 
+                {/* ABA Direct Link Button */}
+                {paymentGateway === "ABA Pay" && (
+                  <a
+                    id="aba-checkout-direct"
+                    href={checkoutInfo.paywayUrl || ABA_PAYWAY_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full max-w-sm bg-gradient-to-r from-[#002d56] via-[#00386b] to-[#00a2db] hover:from-[#001c36] hover:to-[#008bc0] text-white text-xs font-black py-3.5 px-5 rounded-2xl shadow-lg hover:shadow-xl hover:scale-101 transition-all cursor-pointer flex items-center justify-center gap-2 border border-cyan-400/40 group"
+                  >
+                    <CreditCard className="w-4 h-4 text-cyan-300 group-hover:scale-110 transition-transform" />
+                    <span className="tracking-wide">
+                      {lang === "en" ? "Buy Now via ABA Link" : "ទិញឥឡូវនេះតាម ABA Link"}
+                    </span>
+                    <ExternalLink className="w-4 h-4 text-cyan-200 group-hover:translate-x-0.5 transition-transform" />
+                  </a>
+                )}
+
+                {/* QR Code display */}
                 {checkoutInfo.qrcode ? (
-                  <div className="p-3 bg-white border border-slate-200 rounded-2xl shadow-inner w-48 h-48 flex items-center justify-center animate-pulse">
-                    <img src={checkoutInfo.qrcode} className="w-full h-full object-contain" />
+                  <div className="p-3 bg-white border-2 border-slate-200 rounded-2xl shadow-inner w-48 h-48 flex flex-col items-center justify-center relative">
+                    <img 
+                      src={checkoutInfo.qrcode} 
+                      alt="Payment QR Code" 
+                      className="w-full h-full object-contain" 
+                    />
+                    {paymentGateway === "ABA Pay" && (
+                      <span className="absolute -bottom-2.5 bg-[#002d56] text-cyan-200 text-[9px] font-black px-2.5 py-0.5 rounded-full border border-cyan-400/40 shadow">
+                        ABA Pay KHQR
+                      </span>
+                    )}
                   </div>
                 ) : (
                   <div className="p-8 bg-slate-50 border border-slate-100 rounded-xl w-48 h-48 flex flex-col items-center justify-center gap-2 text-slate-400 leading-tight">
                     <Lock className="w-8 h-8 text-slate-300" />
                     <span className="text-[10px] font-mono">CC GATEWAY SECURE INTEGRATED PROXIES</span>
+                  </div>
+                )}
+
+                {/* ABA Account Breakdown Box */}
+                {paymentGateway === "ABA Pay" && (
+                  <div className="w-full max-w-sm bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-left space-y-2 text-xs">
+                    <div className="flex items-center justify-between">
+                      <span className="text-slate-500 font-medium">ABA Account:</span>
+                      <div className="flex items-center gap-1.5 font-mono font-bold text-slate-900">
+                        <span className="text-sm text-[#002d56]">{checkoutInfo.abaAccount || ABA_ACCOUNT_NO}</span>
+                        <button
+                          onClick={() => {
+                            navigator.clipboard.writeText(checkoutInfo.abaAccount || ABA_ACCOUNT_NO);
+                            setCopiedAbaAccount(true);
+                            setTimeout(() => setCopiedAbaAccount(false), 2000);
+                          }}
+                          className="text-blue-600 hover:text-blue-800 p-1 rounded hover:bg-blue-50 cursor-pointer"
+                          title="Copy Account Number"
+                        >
+                          {copiedAbaAccount ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+                        </button>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="text-slate-500">Merchant Code:</span>
+                      <span className="font-mono font-semibold text-slate-700">{checkoutInfo.abaMerchantCode || ABA_MERCHANT_CODE}</span>
+                    </div>
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="text-slate-500">Merchant Name:</span>
+                      <span className="font-bold text-slate-800">{checkoutInfo.abaMerchantName || "PRO SAN / ABA PAY"}</span>
+                    </div>
+                    <div className="text-[10px] text-slate-400 font-mono truncate pt-1.5 border-t border-slate-200 flex items-center justify-between">
+                      <span className="truncate max-w-[200px]">{checkoutInfo.paywayUrl || ABA_PAYWAY_URL}</span>
+                      <a
+                        href={checkoutInfo.paywayUrl || ABA_PAYWAY_URL}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:underline inline-flex items-center gap-0.5 ml-1 shrink-0"
+                      >
+                        <span>Open</span>
+                        <ExternalLink className="w-2.5 h-2.5" />
+                      </a>
+                    </div>
                   </div>
                 )}
 

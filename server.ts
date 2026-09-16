@@ -609,16 +609,24 @@ app.post("/api/checkout", authenticateToken, (req: any, res: any) => {
     `🆔 *Txn ID:* \`${txnId}\` (Status: Pending)`;
   sendTelegramNotification(checkoutMessage);
 
-  // Provide instruction context for Khmer visual QR pay
+  // Provide instruction context for Khmer visual QR pay & ABA PayWay official direct link
+  const abaPaywayUrl = "https://link.payway.com.kh/aba?id=18E2ED0EE307&code=461423&acc=002292898&dynamic=true";
   let qrCodePayload = "";
-  if (gateway === "ABA Pay" || gateway === "Wing Pay" || gateway === "ACLEDA Pay" || gateway === "TrueMoney") {
-    qrCodePayload = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=ABA_MERCHANT_${txnId}_AMT_${finalPrice}`;
+  if (gateway === "ABA Pay" || gateway === "ABA PayWay" || gateway.includes("ABA")) {
+    // Official ABA PayWay payment link encoded directly into QR Code for instant scan by mobile apps
+    qrCodePayload = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(abaPaywayUrl)}`;
+  } else if (gateway === "Wing Pay" || gateway === "ACLEDA Pay" || gateway === "TrueMoney") {
+    qrCodePayload = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=MERCHANT_${txnId}_AMT_${finalPrice}`;
   }
 
   res.status(201).json({
     message: "Order initialized. Complete payment to unlock course content.",
     order: newOrder,
     qrcode: qrCodePayload,
+    paywayUrl: abaPaywayUrl,
+    abaAccount: "002292898",
+    abaMerchantCode: "461423",
+    abaMerchantName: "PRO SAN / ABA PAY",
   });
 });
 
