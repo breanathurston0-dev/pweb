@@ -1,0 +1,208 @@
+{
+  "users": [
+    {
+      "id": "u-1",
+      "name": "Pro San (Sopheap Mok)",
+      "email": "admin@lms-cambodia.com",
+      "passwordHash": "$2a$10$U22PGrF/CizL5s8gXbeoWuy8Oa7/zX.g9.05T4u9C9mX63U4bQ6yG",
+      "role": "admin",
+      "avatar": "/pro-san.jpg",
+      "phone": "012345678"
+    },
+    {
+      "id": "u-2",
+      "name": "Dara Samath",
+      "email": "teacher@lms-cambodia.com",
+      "passwordHash": "$2a$10$U22PGrF/CizL5s8gXbeoWuy8Oa7/zX.g9.05T4u9C9mX63U4bQ6yG",
+      "role": "teacher",
+      "avatar": "/pro-san.jpg",
+      "phone": "098765432"
+    },
+    {
+      "id": "u-3",
+      "name": "Sokha Chan",
+      "email": "student@lms-cambodia.com",
+      "passwordHash": "$2a$10$U22PGrF/CizL5s8gXbeoWuy8Oa7/zX.g9.05T4u9C9mX63U4bQ6yG",
+      "role": "student",
+      "avatar": "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150",
+      "phone": "085555444"
+    }
+  ],
+  "courses": [
+    {
+      "id": "c-1",
+      "title": "Mastering React & TypeScript for Modern Full-Stack",
+      "titleKh": "ស្ទាត់ជំនាញ React & TypeScript សម្រាប់ស្ថាបនាគេហទំព័រ",
+      "slug": "mastering-react-typescript",
+      "description": "Build robust scalable client applications with global states, motion layouts, and server-side optimizations using standard guidelines.",
+      "descriptionKh": "ស្ថាបនាគេហទំព័រទំនើបជាមួយ React និង TypeScript ស្វែងយល់ចាប់ពីកម្រិតដំបូងរហូតដល់កម្រិតជំនាញខ្ពស់ រួមទាំងការតភ្ជាប់ Backend។",
+      "price": 59,
+      "discount": 10,
+      "thumbnail": "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800",
+      "category": "Programming",
+      "categoryKh": "សរសេរកូដ",
+      "duration": "18h 45m",
+      "instructor": "Dara Samath",
+      "instructorTitle": "Senior Web Architect",
+      "rating": 4.8,
+      "reviewsCount": 124,
+      "isPopular": true,
+      "isFeatured": true
+    },
+    {
+      "id": "c-2",
+      "title": "Node.js & Express.js Backend Development",
+      "titleKh": "ការអភិវឌ្ឍផ្នែក Backend ជាមួយ Node.js & Express",
+      "slug": "node-express-backend",
+      "description": "Learn server architectural design, API security validations, secure database syncing, rate limiting, and authenticating with JWT.",
+      "descriptionKh": "ស្វែងយល់អំពីស្ថាបត្យកម្មម៉ាស៊ីនបម្រើ (Server) សុវត្ថិភាព API ការគ្រប់គ្រងទិន្នន័យ Google Sheet និងការប្រើប្រាស់ JWT Token។",
+      "price": 49,
+      "discount": 15,
+      "thumbnail": "https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=800",
+      "category": "Backend Development",
+      "categoryKh": "អភិវឌ្ឍន៍ម៉ាស៊ីនបម្រើ",
+      "duration": "14h 30m",
+      "instructor": "Sophy Phirum",
+      "instructorTitle": "Lead Principal Engineer",
+      "rating": 4.9,
+      "reviewsCount": 88,
+      "isPopular": true,
+      "isFeatured": false
+    },
+    {
+      "id": "c-3",
+      "title": "UX/UI Design Foundations for Mobile & Web Applications",
+      "titleKh": "គ្រឹះនៃការរចនា UX/UI សម្រាប់កម្មវិធីទូរស័ព្ទ និងគេហទំព័រ",
+      "slug": "ui-ux-design-foundations",
+      "description": "Design pixel-perfect beautiful web experiences following luxury typography rules, negative space layouts, and responsive flow grids.",
+      "descriptionKh": "ការរចនាបទពិសោធន៍អ្នកប្រើប្រាស់ និងចំណុចប្រទាក់ដ៏ស្រស់ស្អាត តាមរយៈការផ្គូផ្គងអក្សរ ពណ៌ និងរចនាសម្ព័ន្ធប្លង់។",
+      "price": 39,
+      "discount": 0,
+      "thumbnail": "https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?w=800",
+      "category": "Design",
+      "categoryKh": "ការរចនាប្លង់",
+      "duration": "10h 15m",
+      "instructor": "Kanha Srey",
+      "instructorTitle": "Creative Director",
+      "rating": 4.7,
+      "reviewsCount": 52,
+      "isPopular": false,
+      "isFeatured": true
+    }
+  ],
+  "lessons": [
+    {
+      "id": "l-1",
+      "courseId": "c-1",
+      "title": "Course Introduction & Setup Guide",
+      "titleKh": "ការណែនាំអំពីវគ្គសិក្សានិងការដំឡើងបរិស្ថានការងារ",
+      "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
+      "duration": "12:15",
+      "isPreview": true,
+      "orderIndex": 1
+    },
+    {
+      "id": "l-2",
+      "courseId": "c-1",
+      "title": "Understanding React 19 State Management & Custom Hooks",
+      "titleKh": "ស្វែងយល់អំពីការគ្រប់គ្រង State ក្នុង React 19 និង Custom Hooks",
+      "videoUrl": "https://www.w3schools.com/html/movie.mp4",
+      "duration": "25:40",
+      "isPreview": false,
+      "orderIndex": 2
+    },
+    {
+      "id": "l-3",
+      "courseId": "c-1",
+      "title": "TypeScript Deep Dive with Generics & Types",
+      "titleKh": "ស្វែងយល់លម្អិតអំពី TypeScript Generics និង Types",
+      "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
+      "duration": "32:10",
+      "isPreview": false,
+      "orderIndex": 3
+    },
+    {
+      "id": "l-4",
+      "courseId": "c-1",
+      "title": "Adding Motion Layouts & Complex Route Transitions",
+      "titleKh": "ការបន្ថែមចលនា និងការផ្លាស់ប្តូរទំព័រជាមួយ Framer Motion",
+      "videoUrl": "https://www.w3schools.com/html/movie.mp4",
+      "duration": "18:22",
+      "isPreview": false,
+      "orderIndex": 4
+    },
+    {
+      "id": "l-5",
+      "courseId": "c-2",
+      "title": "Introduction to Node.js Runtime and CommonJS vs ESM",
+      "titleKh": "ការណែនាំអំពី Node.js Runtime និងការប្រៀបធៀប CommonJS និង ESM",
+      "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
+      "duration": "15:45",
+      "isPreview": true,
+      "orderIndex": 1
+    },
+    {
+      "id": "l-6",
+      "courseId": "c-2",
+      "title": "Configuring Express Routes, Middlewares and CORS Policy",
+      "titleKh": "ការកំណត់រចនាសម្ព័ន្ធ Express Routes, Middlewares និង CORS",
+      "videoUrl": "https://www.w3schools.com/html/movie.mp4",
+      "duration": "22:50",
+      "isPreview": false,
+      "orderIndex": 2
+    },
+    {
+      "id": "l-7",
+      "courseId": "c-2",
+      "title": "JWT Authentication, Bearer Token Validations & Input Sanitizations",
+      "titleKh": "ការផ្ទៀងផ្ទាត់ JWT Authentication និងសុវត្ថិភាពការបញ្ចូលទិន្នន័យ",
+      "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
+      "duration": "28:15",
+      "isPreview": false,
+      "orderIndex": 3
+    },
+    {
+      "id": "l-8",
+      "courseId": "c-3",
+      "title": "Design Principles: Contrast, Alignment, & Luxury Fonts",
+      "titleKh": "គោលការណ៍រចនា៖ ភាពខុសគ្នា តម្រឹម និងពុម្ពអក្សរប្រណីត",
+      "videoUrl": "https://www.w3schools.com/html/movie.mp4",
+      "duration": "14:10",
+      "isPreview": true,
+      "orderIndex": 1
+    },
+    {
+      "id": "l-9",
+      "courseId": "c-3",
+      "title": "Figma Prototyping and Desktop Responsive Layouts",
+      "titleKh": "ការបង្កើតគំរូ Figma Prototyping និងប្លង់សម្របតាមអេក្រង់កុំព្យូទ័រ",
+      "videoUrl": "https://www.w3schools.com/html/mov_bbb.mp4",
+      "duration": "24:35",
+      "isPreview": false,
+      "orderIndex": 2
+    }
+  ],
+  "orders": [
+    {
+      "id": "o-1",
+      "userId": "u-3",
+      "courseId": "c-1",
+      "paymentStatus": "completed",
+      "amount": 49,
+      "transactionId": "TXNABA92841029",
+      "createdAt": "2026-05-25T14:22:00Z",
+      "gateway": "ABA Pay"
+    }
+  ],
+  "teacherMessages": [],
+  "settings": {
+    "siteName": "PRO SAN",
+    "siteNameKh": "ប្រូសាន",
+    "logoUrl": "",
+    "telegramBotToken": "",
+    "telegramChatId": "",
+    "googleSheetsId": "",
+    "googleServiceAccountEmail": "",
+    "googlePrivateKey": ""
+  }
+}

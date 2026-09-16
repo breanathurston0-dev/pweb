@@ -1,0 +1,6 @@
+{
+  "name": "PRO SAN",
+  "description": "A professional online learning platform with a Node.js backend, Admin Dashboard, Student Panel, Khmer/English support, and Google Sheets integration.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
