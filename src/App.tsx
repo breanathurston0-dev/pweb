@@ -4088,348 +4088,408 @@ export default function App() {
 
             {/* Platform Audit Trail System Component */}
             <div id="admin-audit-log-terminal" className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm space-y-6">
-              <header id="admin-audit-log-terminal-header" className="flex flex-col xl:flex-row xl:items-center justify-between gap-4 border-b border-slate-100 pb-4">
-                <div className="space-y-1 shrink-0">
-                  <h3 className="font-extrabold text-slate-900 text-sm flex items-center gap-2">
-                    <Activity className="w-4.5 h-4.5 text-slate-500" />
-                    <span>Compliance Audit Log System</span>
-                  </h3>
-                  <p className="text-xs text-slate-500">Track and display real-time events for administrative actions, safety triggers, database synchronizations, and order checkouts.</p>
-                </div>
-
-                {/* Active vs Archived Log State Summary Bar */}
-                <div
-                  id="admin-audit-summary-bar"
-                  className="flex flex-wrap items-center gap-2.5 px-3.5 py-1.5 bg-slate-50 dark:bg-slate-850/90 rounded-2xl border border-slate-200/80 dark:border-slate-800 text-xs shadow-2xs shrink-0"
-                  aria-label="Summary count of Active versus Archived audit logs"
-                >
-                  <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
-                    Log State:
-                  </span>
-
-                  {/* Active Count Pill */}
-                  <button
-                    type="button"
-                    id="audit-summary-active-count"
-                    onClick={() => setAuditActionFilter(auditActionFilter === "ACTIVE_ONLY" ? "ALL" : "ACTIVE_ONLY")}
-                    className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-mono font-bold border transition-all cursor-pointer ${
-                      auditActionFilter === "ACTIVE_ONLY"
-                        ? "bg-blue-600 text-white border-blue-700 shadow-xs"
-                        : "bg-blue-50 text-blue-800 border-blue-200/80 hover:bg-blue-100/80 dark:bg-blue-950/50 dark:text-blue-300 dark:border-blue-800"
-                    }`}
-                    title={`Click to filter: ${auditSummaryStats.activeCount} Active logs`}
-                  >
-                    <span className={`w-2 h-2 rounded-full shadow-xs ${auditActionFilter === "ACTIVE_ONLY" ? "bg-white" : "bg-blue-500"}`} />
-                    <span>{auditSummaryStats.activeCount}</span>
-                    <span className={`text-[10px] font-sans font-semibold ${auditActionFilter === "ACTIVE_ONLY" ? "text-blue-100" : "text-blue-600 dark:text-blue-400"}`}>Active</span>
-                  </button>
-
-                  <span className="text-slate-300 dark:text-slate-700 font-mono text-[11px] font-bold">vs</span>
-
-                  {/* Archived Count Pill */}
-                  <button
-                    type="button"
-                    id="audit-summary-archived-count"
-                    onClick={() => setAuditActionFilter(auditActionFilter === "ARCHIVED_ONLY" ? "ALL" : "ARCHIVED_ONLY")}
-                    className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-mono font-bold border transition-all cursor-pointer ${
-                      auditActionFilter === "ARCHIVED_ONLY"
-                        ? "bg-amber-600 text-white border-amber-700 shadow-xs"
-                        : "bg-amber-50 text-amber-900 border-amber-200/80 hover:bg-amber-100/80 dark:bg-amber-950/50 dark:text-amber-300 dark:border-amber-800"
-                    }`}
-                    title={`Click to filter: ${auditSummaryStats.archivedCount} Archived logs`}
-                  >
-                    <span className={`w-2 h-2 rounded-full shadow-xs ${auditActionFilter === "ARCHIVED_ONLY" ? "bg-white" : "bg-amber-500"}`} />
-                    <span>{auditSummaryStats.archivedCount}</span>
-                    <span className={`text-[10px] font-sans font-semibold ${auditActionFilter === "ARCHIVED_ONLY" ? "text-amber-100" : "text-amber-700 dark:text-amber-400"}`}>Archived</span>
-                  </button>
-
-                  <span className="text-slate-300 dark:text-slate-700 font-mono text-[11px] font-bold">vs</span>
-
-                  {/* Critical Count Pill */}
-                  <button
-                    type="button"
-                    id="audit-summary-critical-count"
-                    onClick={() => setAuditActionFilter(auditActionFilter === "CRITICAL_ONLY" ? "ALL" : "CRITICAL_ONLY")}
-                    className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-mono font-bold border transition-all cursor-pointer ${
-                      auditActionFilter === "CRITICAL_ONLY"
-                        ? "bg-red-600 text-white border-red-700 shadow-xs"
-                        : "bg-red-50 text-red-800 border-red-200/80 hover:bg-red-100/80 dark:bg-red-950/50 dark:text-red-300 dark:border-red-800"
-                    }`}
-                    title={`Click to filter: ${auditSummaryStats.criticalCount} Critical logs`}
-                  >
-                    <span className={`w-2 h-2 rounded-full shadow-xs ${auditActionFilter === "CRITICAL_ONLY" ? "bg-white" : "bg-red-500"}`} />
-                    <span>{auditSummaryStats.criticalCount}</span>
-                    <span className={`text-[10px] font-sans font-semibold ${auditActionFilter === "CRITICAL_ONLY" ? "text-red-100" : "text-red-700 dark:text-red-400"}`}>Critical</span>
-                  </button>
-
-                  {/* Visual ratio progress indicator */}
-                  <div className="hidden sm:flex items-center gap-2 pl-1 border-l border-slate-200 dark:border-slate-800">
-                    <div
-                      className="w-16 sm:w-20 h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden flex shadow-inner"
-                      title={`${auditSummaryStats.activePercentage}% Active (${auditSummaryStats.activeCount}), ${auditSummaryStats.archivedPercentage}% Archived (${auditSummaryStats.archivedCount})`}
-                    >
-                      <div
-                        className="h-full bg-blue-500 transition-all duration-300"
-                        style={{ width: `${auditSummaryStats.activePercentage}%` }}
-                      />
-                      <div
-                        className="h-full bg-amber-500 transition-all duration-300"
-                        style={{ width: `${auditSummaryStats.archivedPercentage}%` }}
-                      />
-                    </div>
-                    <span className="text-[10px] font-mono font-semibold text-slate-400 dark:text-slate-500">
-                      {auditSummaryStats.totalCount} total
-                    </span>
+              <header id="admin-audit-log-terminal-header" className="space-y-4 border-b border-slate-100 dark:border-slate-800 pb-4">
+                {/* Header Top Row: Title, Description & Action Controls */}
+                <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4">
+                  <div className="space-y-1 shrink-0">
+                    <h3 className="font-extrabold text-slate-900 dark:text-white text-sm flex items-center gap-2">
+                      <Activity className="w-4.5 h-4.5 text-slate-500" />
+                      <span>Compliance Audit Log System</span>
+                    </h3>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">Track and display real-time events for administrative actions, safety triggers, database synchronizations, and order checkouts.</p>
                   </div>
-                </div>
 
-                {/* Instant Search Input in Terminal Header */}
-                <div className="flex-1 max-w-sm xl:max-w-md w-full relative">
-                  <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-                  <input
-                    id="audit-log-search-input"
-                    type="text"
-                    value={auditSearch}
-                    onChange={(e) => setAuditSearch(e.target.value)}
-                    placeholder="Search logs by username, details, or ID..."
-                    aria-label="Filter audit logs by username, details, or ID"
-                    className="w-full bg-slate-50 hover:bg-slate-100/80 focus:bg-white border border-slate-200 focus:border-slate-400 rounded-2xl pl-10 pr-9 py-2 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-300/30 transition-all shadow-2xs"
-                  />
-                  {auditSearch && (
+                  <div className="flex items-center gap-2 relative shrink-0 flex-wrap">
+                    {/* Critical Severity Filter Button */}
                     <button
-                      id="audit-log-search-clear-btn"
+                      id="audit-filter-critical-btn"
                       type="button"
-                      onClick={() => setAuditSearch("")}
-                      className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1 rounded-full hover:bg-slate-200 cursor-pointer transition-colors"
-                      title="Clear search"
-                    >
-                      <X className="w-3.5 h-3.5" />
-                    </button>
-                  )}
-                </div>
-
-                <div className="flex items-center gap-2 relative shrink-0 flex-wrap">
-                  {/* Critical Severity Filter Button */}
-                  <button
-                    id="audit-filter-critical-btn"
-                    type="button"
-                    aria-label="Filter audit log table to show Critical severity events only"
-                    onClick={() => setAuditActionFilter(auditActionFilter === "CRITICAL_ONLY" ? "ALL" : "CRITICAL_ONLY")}
-                    className={`flex items-center gap-1.5 text-[11px] font-bold px-3.5 py-2 rounded-2xl border transition-all cursor-pointer select-none ${
-                      auditActionFilter === "CRITICAL_ONLY"
-                        ? "bg-red-600 text-white border-red-700 shadow-xs ring-2 ring-red-300 dark:ring-red-900"
-                        : "bg-white hover:bg-red-50/80 text-red-700 border-slate-200 hover:border-red-200 dark:bg-slate-900 dark:text-red-400 dark:border-slate-800"
-                    }`}
-                    title={
-                      auditActionFilter === "CRITICAL_ONLY"
-                        ? "Showing Critical severity events only. Click to reset filter."
-                        : `Filter audit log table to show Critical severity events only (${auditSummaryStats.criticalCount} events)`
-                    }
-                  >
-                    <ShieldAlert className={`w-3.5 h-3.5 ${auditActionFilter === "CRITICAL_ONLY" ? "text-white" : "text-red-600 dark:text-red-400"}`} />
-                    <span className="whitespace-nowrap">Critical Severity Only</span>
-                    <span
-                      className={`text-[9px] font-mono font-extrabold px-1.5 py-0.5 rounded-full ${
+                      aria-label="Filter audit log table to show Critical severity events only"
+                      onClick={() => setAuditActionFilter(auditActionFilter === "CRITICAL_ONLY" ? "ALL" : "CRITICAL_ONLY")}
+                      className={`flex items-center gap-1.5 text-[11px] font-bold px-3.5 py-2 rounded-2xl border transition-all cursor-pointer select-none ${
                         auditActionFilter === "CRITICAL_ONLY"
-                          ? "bg-white/25 text-white"
-                          : "bg-red-100 text-red-800 dark:bg-red-950 dark:text-red-300"
-                      }`}
-                    >
-                      {auditSummaryStats.criticalCount}
-                    </span>
-                  </button>
-
-                  {/* Live Monitor Toggle */}
-                  <button
-                    id="audit-live-monitor-toggle"
-                    type="button"
-                    role="switch"
-                    aria-checked={isLiveMonitorActive}
-                    onClick={() => setIsLiveMonitorActive((prev) => !prev)}
-                    className={`flex items-center gap-2 text-[11px] font-bold px-3 py-2 rounded-2xl border transition-all cursor-pointer select-none ${
-                      isLiveMonitorActive
-                        ? "bg-emerald-50 text-emerald-700 border-emerald-300 dark:bg-emerald-950/50 dark:text-emerald-300 dark:border-emerald-800 shadow-xs"
-                        : "bg-white hover:bg-slate-50 text-slate-600 border-slate-200 dark:bg-slate-900 dark:text-slate-300 dark:border-slate-800"
-                    }`}
-                    title={
-                      isLiveMonitorActive
-                        ? "Live Monitor is ACTIVE — automatically polling every 10 seconds. Click to pause."
-                        : "Click to enable Live Monitor (polls for new logs every 10 seconds)"
-                    }
-                  >
-                    <span className="relative flex h-2 w-2">
-                      {isLiveMonitorActive && (
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                      )}
-                      <span className={`relative inline-flex rounded-full h-2 w-2 ${isLiveMonitorActive ? "bg-emerald-500" : "bg-slate-300 dark:bg-slate-600"}`}></span>
-                    </span>
-                    <span className="whitespace-nowrap">Live Monitor</span>
-                    {/* Switch pill badge */}
-                    <div
-                      className={`w-7 h-4 rounded-full p-0.5 transition-colors duration-200 ease-in-out flex items-center ${
-                        isLiveMonitorActive ? "bg-emerald-500 justify-end" : "bg-slate-300 dark:bg-slate-700 justify-start"
-                      }`}
-                    >
-                      <div className="w-3 h-3 rounded-full bg-white shadow-xs transition-transform" />
-                    </div>
-                    {isLiveMonitorActive && (
-                      <span className="text-[9px] font-mono font-extrabold px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-200">
-                        {isPollingLogs ? "Syncing..." : "10s"}
-                      </span>
-                    )}
-                  </button>
-
-                  {/* Batch Actions Dropdown in Header */}
-                  <div className="relative" ref={batchDropdownRef}>
-                    <button
-                      id="audit-batch-actions-btn"
-                      type="button"
-                      onClick={() => setIsBatchDropdownOpen((prev) => !prev)}
-                      className={`flex items-center gap-1.5 text-[11px] font-bold px-3.5 py-2 rounded-2xl border transition-all cursor-pointer ${
-                        selectedAuditLogIds.length > 0
-                          ? "bg-slate-900 text-white border-slate-800 hover:bg-slate-800 shadow-sm"
-                          : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
+                          ? "bg-red-600 text-white border-red-700 shadow-xs ring-2 ring-red-300 dark:ring-red-900"
+                          : "bg-white hover:bg-red-50/80 text-red-700 border-slate-200 hover:border-red-200 dark:bg-slate-900 dark:text-red-400 dark:border-slate-800"
                       }`}
                       title={
-                        selectedAuditLogIds.length > 0
-                          ? `${selectedAuditLogIds.length} logs selected for batch operations`
-                          : "Batch actions (select logs below to enable actions)"
+                        auditActionFilter === "CRITICAL_ONLY"
+                          ? "Showing Critical severity events only. Click to reset filter."
+                          : `Filter audit log table to show Critical severity events only (${auditSummaryStats.criticalCount} events)`
                       }
                     >
-                      <CheckSquare className={`w-3.5 h-3.5 ${selectedAuditLogIds.length > 0 ? "text-cyan-400" : "text-slate-400"}`} />
-                      <span>Batch Actions</span>
-                      {selectedAuditLogIds.length > 0 && (
-                        <span className="bg-cyan-500 text-slate-950 font-black text-[9px] px-1.5 py-0.5 rounded-full leading-none">
-                          {selectedAuditLogIds.length}
-                        </span>
-                      )}
-                      <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isBatchDropdownOpen ? "rotate-180" : ""}`} />
+                      <ShieldAlert className={`w-3.5 h-3.5 ${auditActionFilter === "CRITICAL_ONLY" ? "text-white" : "text-red-600 dark:text-red-400"}`} />
+                      <span className="whitespace-nowrap">Critical Severity Only</span>
+                      <span
+                        className={`text-[9px] font-mono font-extrabold px-1.5 py-0.5 rounded-full ${
+                          auditActionFilter === "CRITICAL_ONLY"
+                            ? "bg-white/25 text-white"
+                            : "bg-red-100 text-red-800 dark:bg-red-950 dark:text-red-300"
+                        }`}
+                      >
+                        {auditSummaryStats.criticalCount}
+                      </span>
                     </button>
 
-                    {/* Batch Actions Dropdown Menu */}
-                    {isBatchDropdownOpen && (
+                    {/* Live Monitor Toggle */}
+                    <button
+                      id="audit-live-monitor-toggle"
+                      type="button"
+                      role="switch"
+                      aria-checked={isLiveMonitorActive}
+                      onClick={() => setIsLiveMonitorActive((prev) => !prev)}
+                      className={`flex items-center gap-2 text-[11px] font-bold px-3 py-2 rounded-2xl border transition-all cursor-pointer select-none ${
+                        isLiveMonitorActive
+                          ? "bg-emerald-50 text-emerald-700 border-emerald-300 dark:bg-emerald-950/50 dark:text-emerald-300 dark:border-emerald-800 shadow-xs"
+                          : "bg-white hover:bg-slate-50 text-slate-600 border-slate-200 dark:bg-slate-900 dark:text-slate-300 dark:border-slate-800"
+                      }`}
+                      title={
+                        isLiveMonitorActive
+                          ? "Live Monitor is ACTIVE — automatically polling every 10 seconds. Click to pause."
+                          : "Click to enable Live Monitor (polls for new logs every 10 seconds)"
+                      }
+                    >
+                      <span className="relative flex h-2 w-2">
+                        {isLiveMonitorActive && (
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                        )}
+                        <span className={`relative inline-flex rounded-full h-2 w-2 ${isLiveMonitorActive ? "bg-emerald-500" : "bg-slate-300 dark:bg-slate-600"}`}></span>
+                      </span>
+                      <span className="whitespace-nowrap">Live Monitor</span>
+                      {/* Switch pill badge */}
                       <div
-                        id="audit-batch-actions-dropdown"
-                        className="absolute right-0 mt-2 w-64 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl z-50 p-2 space-y-1 text-slate-800 dark:text-slate-200 animate-in fade-in zoom-in-95 duration-150"
+                        className={`w-7 h-4 rounded-full p-0.5 transition-colors duration-200 ease-in-out flex items-center ${
+                          isLiveMonitorActive ? "bg-emerald-500 justify-end" : "bg-slate-300 dark:bg-slate-700 justify-start"
+                        }`}
                       >
-                        <div className="px-3 py-1.5 text-[10px] font-mono uppercase tracking-wider text-slate-400 dark:text-slate-500 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
-                          <span>Batch Controls</span>
-                          <span className="font-bold text-cyan-600 dark:text-cyan-400">
-                            {selectedAuditLogIds.length} Selected
-                          </span>
-                        </div>
-
-                        {/* Action 1: Copy Selected IDs */}
-                        <button
-                          id="batch-action-copy-ids"
-                          type="button"
-                          onClick={handleCopySelectedAuditLogIds}
-                          disabled={selectedAuditLogIds.length === 0}
-                          className="w-full flex items-center gap-2.5 px-3 py-2 text-left text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-cyan-50 hover:text-cyan-800 dark:hover:bg-cyan-950/40 dark:hover:text-cyan-300 rounded-xl transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
-                        >
-                          <Copy className="w-4 h-4 text-cyan-600 shrink-0" />
-                          <div>
-                            <div className="leading-tight">Copy Selected IDs</div>
-                            <div className="text-[9px] font-normal text-slate-400 dark:text-slate-500">Copy IDs to system clipboard</div>
-                          </div>
-                        </button>
-
-                        {/* Action 2: Archive Selected */}
-                        <button
-                          id="batch-action-archive-logs"
-                          type="button"
-                          onClick={() => handleArchiveSelectedAuditLogs(true)}
-                          disabled={selectedAuditLogIds.length === 0 || isArchivingLogs}
-                          className="w-full flex items-center gap-2.5 px-3 py-2 text-left text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-amber-50 hover:text-amber-800 dark:hover:bg-amber-950/40 dark:hover:text-amber-300 rounded-xl transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
-                        >
-                          {isArchivingLogs ? (
-                            <RefreshCw className="w-4 h-4 text-amber-600 animate-spin shrink-0" />
-                          ) : (
-                            <Archive className="w-4 h-4 text-amber-600 shrink-0" />
-                          )}
-                          <div>
-                            <div className="leading-tight">Archive Selected</div>
-                            <div className="text-[9px] font-normal text-slate-400 dark:text-slate-500">Set status to Archived (Amber pill)</div>
-                          </div>
-                        </button>
-
-                        {/* Action 3: Restore to Active */}
-                        <button
-                          id="batch-action-unarchive-logs"
-                          type="button"
-                          onClick={() => handleArchiveSelectedAuditLogs(false)}
-                          disabled={selectedAuditLogIds.length === 0 || isArchivingLogs}
-                          className="w-full flex items-center gap-2.5 px-3 py-2 text-left text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-blue-50 hover:text-blue-800 dark:hover:bg-blue-950/40 dark:hover:text-blue-300 rounded-xl transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
-                        >
-                          <RefreshCw className={`w-4 h-4 text-blue-600 shrink-0 ${isArchivingLogs ? "animate-spin" : ""}`} />
-                          <div>
-                            <div className="leading-tight">Restore to Active</div>
-                            <div className="text-[9px] font-normal text-slate-400 dark:text-slate-500">Restore status to Active (Blue pill)</div>
-                          </div>
-                        </button>
-
-                        {/* Action 4: Export Selected Logs to CSV */}
-                        <button
-                          id="batch-action-export-csv"
-                          type="button"
-                          onClick={handleExportSelectedAuditLogsCSV}
-                          disabled={selectedAuditLogIds.length === 0 || isExportingAuditCsv}
-                          className="w-full flex items-center gap-2.5 px-3 py-2 text-left text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-emerald-50 hover:text-emerald-800 dark:hover:bg-emerald-950/40 dark:hover:text-emerald-300 rounded-xl transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
-                        >
-                          {isExportingAuditCsv ? (
-                            <RefreshCw className="w-4 h-4 text-emerald-600 animate-spin shrink-0" />
-                          ) : (
-                            <FileSpreadsheet className="w-4 h-4 text-emerald-600 shrink-0" />
-                          )}
-                          <div>
-                            <div className="leading-tight">Export Selected Logs to CSV</div>
-                            <div className="text-[9px] font-normal text-slate-400 dark:text-slate-500">Download only the chosen audit logs</div>
-                          </div>
-                        </button>
-
-                        {/* Quick Selection Helpers */}
-                        <div className="border-t border-slate-100 dark:border-slate-800 pt-1 mt-1 space-y-1">
-                          {selectedAuditLogIds.length < filteredAuditLogs.length && filteredAuditLogs.length > 0 && (
-                            <button
-                              type="button"
-                              onClick={() => handleSelectAllVisibleAuditLogs(true)}
-                              className="w-full flex items-center gap-2 px-3 py-1.5 text-left text-[11px] font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg cursor-pointer"
-                            >
-                              <Check className="w-3 h-3 text-slate-400" />
-                              <span>Select All Filtered ({filteredAuditLogs.length})</span>
-                            </button>
-                          )}
-
-                          {selectedAuditLogIds.length > 0 && (
-                            <button
-                              type="button"
-                              onClick={() => {
-                                setSelectedAuditLogIds([]);
-                                setIsBatchDropdownOpen(false);
-                              }}
-                              className="w-full flex items-center gap-2 px-3 py-1.5 text-left text-[11px] font-semibold text-slate-500 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-lg cursor-pointer transition-colors"
-                            >
-                              <X className="w-3 h-3 text-slate-400" />
-                              <span>Clear Selection</span>
-                            </button>
-                          )}
-                        </div>
+                        <div className="w-3 h-3 rounded-full bg-white shadow-xs transition-transform" />
                       </div>
-                    )}
+                      {isLiveMonitorActive && (
+                        <span className="text-[9px] font-mono font-extrabold px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-200">
+                          {isPollingLogs ? "Syncing..." : "10s"}
+                        </span>
+                      )}
+                    </button>
+
+                    {/* Batch Actions Dropdown in Header */}
+                    <div className="relative" ref={batchDropdownRef}>
+                      <button
+                        id="audit-batch-actions-btn"
+                        type="button"
+                        onClick={() => setIsBatchDropdownOpen((prev) => !prev)}
+                        className={`flex items-center gap-1.5 text-[11px] font-bold px-3.5 py-2 rounded-2xl border transition-all cursor-pointer ${
+                          selectedAuditLogIds.length > 0
+                            ? "bg-slate-900 text-white border-slate-800 hover:bg-slate-800 shadow-sm"
+                            : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
+                        }`}
+                        title={
+                          selectedAuditLogIds.length > 0
+                            ? `${selectedAuditLogIds.length} logs selected for batch operations`
+                            : "Batch actions (select logs below to enable actions)"
+                        }
+                      >
+                        <CheckSquare className={`w-3.5 h-3.5 ${selectedAuditLogIds.length > 0 ? "text-cyan-400" : "text-slate-400"}`} />
+                        <span>Batch Actions</span>
+                        {selectedAuditLogIds.length > 0 && (
+                          <span className="bg-cyan-500 text-slate-950 font-black text-[9px] px-1.5 py-0.5 rounded-full leading-none">
+                            {selectedAuditLogIds.length}
+                          </span>
+                        )}
+                        <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isBatchDropdownOpen ? "rotate-180" : ""}`} />
+                      </button>
+
+                      {/* Batch Actions Dropdown Menu */}
+                      {isBatchDropdownOpen && (
+                        <div
+                          id="audit-batch-actions-dropdown"
+                          className="absolute right-0 mt-2 w-72 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl z-50 p-2 space-y-1 text-slate-800 dark:text-slate-200 animate-in fade-in zoom-in-95 duration-150"
+                        >
+                          <div className="px-3 py-1.5 text-[10px] font-mono uppercase tracking-wider text-slate-400 dark:text-slate-500 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                            <span>Batch Controls</span>
+                            <span className="font-bold text-cyan-600 dark:text-cyan-400">
+                              {selectedAuditLogIds.length} Selected
+                            </span>
+                          </div>
+
+                          {/* Action 1: Copy Selected IDs */}
+                          <button
+                            id="batch-action-copy-ids"
+                            type="button"
+                            onClick={handleCopySelectedAuditLogIds}
+                            disabled={selectedAuditLogIds.length === 0}
+                            className="w-full flex items-center gap-2.5 px-3 py-2 text-left text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-cyan-50 hover:text-cyan-800 dark:hover:bg-cyan-950/40 dark:hover:text-cyan-300 rounded-xl transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+                          >
+                            <Copy className="w-4 h-4 text-cyan-600 shrink-0" />
+                            <div>
+                              <div className="leading-tight">Copy Selected IDs</div>
+                              <div className="text-[9px] font-normal text-slate-400 dark:text-slate-500">Copy IDs to system clipboard</div>
+                            </div>
+                          </button>
+
+                          {/* Action 2: Archive Selected */}
+                          <button
+                            id="batch-action-archive-logs"
+                            type="button"
+                            onClick={() => handleArchiveSelectedAuditLogs(true)}
+                            disabled={selectedAuditLogIds.length === 0 || isArchivingLogs}
+                            className="w-full flex items-center gap-2.5 px-3 py-2 text-left text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-amber-50 hover:text-amber-800 dark:hover:bg-amber-950/40 dark:hover:text-amber-300 rounded-xl transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+                          >
+                            {isArchivingLogs ? (
+                              <RefreshCw className="w-4 h-4 text-amber-600 animate-spin shrink-0" />
+                            ) : (
+                              <Archive className="w-4 h-4 text-amber-600 shrink-0" />
+                            )}
+                            <div>
+                              <div className="leading-tight">Archive Selected</div>
+                              <div className="text-[9px] font-normal text-slate-400 dark:text-slate-500">Set status to Archived (Amber pill)</div>
+                            </div>
+                          </button>
+
+                          {/* Action 3: Restore to Active */}
+                          <button
+                            id="batch-action-unarchive-logs"
+                            type="button"
+                            onClick={() => handleArchiveSelectedAuditLogs(false)}
+                            disabled={selectedAuditLogIds.length === 0 || isArchivingLogs}
+                            className="w-full flex items-center gap-2.5 px-3 py-2 text-left text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-blue-50 hover:text-blue-800 dark:hover:bg-blue-950/40 dark:hover:text-blue-300 rounded-xl transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+                          >
+                            <RefreshCw className={`w-4 h-4 text-blue-600 shrink-0 ${isArchivingLogs ? "animate-spin" : ""}`} />
+                            <div>
+                              <div className="leading-tight">Restore to Active</div>
+                              <div className="text-[9px] font-normal text-slate-400 dark:text-slate-500">Restore status to Active (Blue pill)</div>
+                            </div>
+                          </button>
+
+                          {/* Action 4: Export Selected Logs to CSV */}
+                          <button
+                            id="batch-action-export-csv"
+                            type="button"
+                            onClick={handleExportSelectedAuditLogsCSV}
+                            disabled={selectedAuditLogIds.length === 0 || isExportingAuditCsv}
+                            className="w-full flex items-center gap-2.5 px-3 py-2 text-left text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-emerald-50 hover:text-emerald-800 dark:hover:bg-emerald-950/40 dark:hover:text-emerald-300 rounded-xl transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+                          >
+                            {isExportingAuditCsv ? (
+                              <RefreshCw className="w-4 h-4 text-emerald-600 animate-spin shrink-0" />
+                            ) : (
+                              <FileSpreadsheet className="w-4 h-4 text-emerald-600 shrink-0" />
+                            )}
+                            <div>
+                              <div className="leading-tight">Export Selected Logs to CSV</div>
+                              <div className="text-[9px] font-normal text-slate-400 dark:text-slate-500">Download only the chosen audit logs</div>
+                            </div>
+                          </button>
+
+                          {/* Quick Selection Helpers */}
+                          <div className="border-t border-slate-100 dark:border-slate-800 pt-1 mt-1 space-y-1">
+                            {selectedAuditLogIds.length < filteredAuditLogs.length && filteredAuditLogs.length > 0 && (
+                              <button
+                                type="button"
+                                onClick={() => handleSelectAllVisibleAuditLogs(true)}
+                                className="w-full flex items-center gap-2 px-3 py-1.5 text-left text-[11px] font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg cursor-pointer"
+                              >
+                                <Check className="w-3 h-3 text-slate-400" />
+                                <span>Select All Filtered ({filteredAuditLogs.length})</span>
+                              </button>
+                            )}
+
+                            {selectedAuditLogIds.length > 0 && (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setSelectedAuditLogIds([]);
+                                  setIsBatchDropdownOpen(false);
+                                }}
+                                className="w-full flex items-center gap-2 px-3 py-1.5 text-left text-[11px] font-semibold text-slate-500 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-lg cursor-pointer transition-colors"
+                              >
+                                <X className="w-3 h-3 text-slate-400" />
+                                <span>Clear Selection</span>
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    <button
+                      id="admin-audit-refresh-logs-btn"
+                      onClick={() => {
+                        fetchAdminDetails();
+                        pollAuditLogs();
+                      }}
+                      className="flex items-center gap-1.5 text-[10px] bg-slate-50 hover:bg-slate-100 font-bold px-3 py-2 rounded-2xl border border-slate-200 transition-colors cursor-pointer text-slate-700"
+                      title="Manually refresh audit logs"
+                    >
+                      <RefreshCw className={`w-3 h-3 text-slate-400 ${isPollingLogs ? "animate-spin text-emerald-500" : ""}`} />
+                      <span>Refresh Logs</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Header Secondary Row: Severity Color-Coding Legend, Summary Counters & Search */}
+                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 pt-1">
+                  {/* Audit Log Severity Color-Coding Legend */}
+                  <div
+                    id="admin-audit-severity-legend"
+                    role="region"
+                    aria-label="Audit Log Severity Color Legend"
+                    className="flex flex-wrap items-center gap-2.5 px-3.5 py-1.5 bg-slate-50/90 dark:bg-slate-850/80 rounded-2xl border border-slate-200/80 dark:border-slate-800 text-xs shadow-2xs shrink-0"
+                  >
+                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 flex items-center gap-1.5">
+                      <Info className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500 shrink-0" />
+                      <span>Severity Legend:</span>
+                    </span>
+
+                    {/* Critical Severity Legend Item */}
+                    <div
+                      id="audit-legend-critical"
+                      className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200/80 dark:border-red-800/80 text-red-800 dark:text-red-300 cursor-default"
+                      title="Critical Severity: Destructive or high-impact actions (User deletion, role modification, account bans)"
+                    >
+                      <span className="relative flex h-2 w-2 shrink-0">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                      </span>
+                      <span className="font-extrabold text-[10.5px] font-mono">Critical</span>
+                      <span className="text-[9.5px] text-red-600/90 dark:text-red-400 font-sans hidden sm:inline">(Delete, Ban, Role)</span>
+                    </div>
+
+                    {/* Informational Severity Legend Item */}
+                    <div
+                      id="audit-legend-informational"
+                      className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 cursor-default"
+                      title="Informational Severity: Routine operational activities (Course creation, content updates, database synchronization)"
+                    >
+                      <span className="w-2 h-2 rounded-full bg-slate-400 dark:bg-slate-500 shrink-0"></span>
+                      <span className="font-extrabold text-[10.5px] font-mono">Informational</span>
+                      <span className="text-[9.5px] text-slate-500 dark:text-slate-400 font-sans hidden sm:inline">(Standard Ops)</span>
+                    </div>
+
+                    {/* State Color Coding */}
+                    <div className="hidden sm:flex items-center gap-2 pl-2 border-l border-slate-200 dark:border-slate-700 text-[10px]">
+                      <span className="text-slate-400 dark:text-slate-500 font-mono text-[9px] uppercase font-semibold">Status:</span>
+                      <span className="inline-flex items-center gap-1 text-blue-700 dark:text-blue-300 font-medium" title="Active (Operational / Unarchived Log)">
+                        <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                        Active
+                      </span>
+                      <span className="inline-flex items-center gap-1 text-amber-700 dark:text-amber-300 font-medium" title="Archived (Historical Log Record)">
+                        <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                        Archived
+                      </span>
+                    </div>
                   </div>
 
-                  <button
-                    id="admin-audit-refresh-logs-btn"
-                    onClick={() => {
-                      fetchAdminDetails();
-                      pollAuditLogs();
-                    }}
-                    className="flex items-center gap-1.5 text-[10px] bg-slate-50 hover:bg-slate-100 font-bold px-3 py-2 rounded-2xl border border-slate-200 transition-colors cursor-pointer text-slate-700"
-                    title="Manually refresh audit logs"
-                  >
-                    <RefreshCw className={`w-3 h-3 text-slate-400 ${isPollingLogs ? "animate-spin text-emerald-500" : ""}`} />
-                    <span>Refresh Logs</span>
-                  </button>
+                  {/* Right side: Log State Summary Bar & Search */}
+                  <div className="flex flex-wrap items-center gap-2.5 flex-1 justify-start lg:justify-end">
+                    {/* Active vs Archived Log State Summary Bar */}
+                    <div
+                      id="admin-audit-summary-bar"
+                      className="flex flex-wrap items-center gap-2.5 px-3 py-1 bg-slate-50 dark:bg-slate-850/90 rounded-2xl border border-slate-200/80 dark:border-slate-800 text-xs shadow-2xs shrink-0"
+                      aria-label="Summary count of Active versus Archived audit logs"
+                    >
+                      <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+                        Log State:
+                      </span>
+
+                      {/* Active Count Pill */}
+                      <button
+                        type="button"
+                        id="audit-summary-active-count"
+                        onClick={() => setAuditActionFilter(auditActionFilter === "ACTIVE_ONLY" ? "ALL" : "ACTIVE_ONLY")}
+                        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-mono font-bold border transition-all cursor-pointer ${
+                          auditActionFilter === "ACTIVE_ONLY"
+                            ? "bg-blue-600 text-white border-blue-700 shadow-xs"
+                            : "bg-blue-50 text-blue-800 border-blue-200/80 hover:bg-blue-100/80 dark:bg-blue-950/50 dark:text-blue-300 dark:border-blue-800"
+                        }`}
+                        title={`Click to filter: ${auditSummaryStats.activeCount} Active logs`}
+                      >
+                        <span className={`w-2 h-2 rounded-full shadow-xs ${auditActionFilter === "ACTIVE_ONLY" ? "bg-white" : "bg-blue-500"}`} />
+                        <span>{auditSummaryStats.activeCount}</span>
+                        <span className={`text-[10px] font-sans font-semibold ${auditActionFilter === "ACTIVE_ONLY" ? "text-blue-100" : "text-blue-600 dark:text-blue-400"}`}>Active</span>
+                      </button>
+
+                      <span className="text-slate-300 dark:text-slate-700 font-mono text-[11px] font-bold">vs</span>
+
+                      {/* Archived Count Pill */}
+                      <button
+                        type="button"
+                        id="audit-summary-archived-count"
+                        onClick={() => setAuditActionFilter(auditActionFilter === "ARCHIVED_ONLY" ? "ALL" : "ARCHIVED_ONLY")}
+                        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-mono font-bold border transition-all cursor-pointer ${
+                          auditActionFilter === "ARCHIVED_ONLY"
+                            ? "bg-amber-600 text-white border-amber-700 shadow-xs"
+                            : "bg-amber-50 text-amber-900 border-amber-200/80 hover:bg-amber-100/80 dark:bg-amber-950/50 dark:text-amber-300 dark:border-amber-800"
+                        }`}
+                        title={`Click to filter: ${auditSummaryStats.archivedCount} Archived logs`}
+                      >
+                        <span className={`w-2 h-2 rounded-full shadow-xs ${auditActionFilter === "ARCHIVED_ONLY" ? "bg-white" : "bg-amber-500"}`} />
+                        <span>{auditSummaryStats.archivedCount}</span>
+                        <span className={`text-[10px] font-sans font-semibold ${auditActionFilter === "ARCHIVED_ONLY" ? "text-amber-100" : "text-amber-700 dark:text-amber-400"}`}>Archived</span>
+                      </button>
+
+                      <span className="text-slate-300 dark:text-slate-700 font-mono text-[11px] font-bold">vs</span>
+
+                      {/* Critical Count Pill */}
+                      <button
+                        type="button"
+                        id="audit-summary-critical-count"
+                        onClick={() => setAuditActionFilter(auditActionFilter === "CRITICAL_ONLY" ? "ALL" : "CRITICAL_ONLY")}
+                        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-mono font-bold border transition-all cursor-pointer ${
+                          auditActionFilter === "CRITICAL_ONLY"
+                            ? "bg-red-600 text-white border-red-700 shadow-xs"
+                            : "bg-red-50 text-red-800 border-red-200/80 hover:bg-red-100/80 dark:bg-red-950/50 dark:text-red-300 dark:border-red-800"
+                        }`}
+                        title={`Click to filter: ${auditSummaryStats.criticalCount} Critical logs`}
+                      >
+                        <span className={`w-2 h-2 rounded-full shadow-xs ${auditActionFilter === "CRITICAL_ONLY" ? "bg-white" : "bg-red-500"}`} />
+                        <span>{auditSummaryStats.criticalCount}</span>
+                        <span className={`text-[10px] font-sans font-semibold ${auditActionFilter === "CRITICAL_ONLY" ? "text-red-100" : "text-red-700 dark:text-red-400"}`}>Critical</span>
+                      </button>
+
+                      {/* Visual ratio progress indicator */}
+                      <div className="hidden sm:flex items-center gap-2 pl-1 border-l border-slate-200 dark:border-slate-800">
+                        <div
+                          className="w-16 sm:w-20 h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden flex shadow-inner"
+                          title={`${auditSummaryStats.activePercentage}% Active (${auditSummaryStats.activeCount}), ${auditSummaryStats.archivedPercentage}% Archived (${auditSummaryStats.archivedCount})`}
+                        >
+                          <div
+                            className="h-full bg-blue-500 transition-all duration-300"
+                            style={{ width: `${auditSummaryStats.activePercentage}%` }}
+                          />
+                          <div
+                            className="h-full bg-amber-500 transition-all duration-300"
+                            style={{ width: `${auditSummaryStats.archivedPercentage}%` }}
+                          />
+                        </div>
+                        <span className="text-[10px] font-mono font-semibold text-slate-400 dark:text-slate-500">
+                          {auditSummaryStats.totalCount} total
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Instant Search Input in Terminal Header */}
+                    <div className="w-full sm:w-56 md:w-64 relative">
+                      <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                      <input
+                        id="audit-log-search-input"
+                        type="text"
+                        value={auditSearch}
+                        onChange={(e) => setAuditSearch(e.target.value)}
+                        placeholder="Search logs by user, details, ID..."
+                        aria-label="Filter audit logs by username, details, or ID"
+                        className="w-full bg-slate-50 hover:bg-slate-100/80 focus:bg-white border border-slate-200 focus:border-slate-400 rounded-2xl pl-10 pr-9 py-1.5 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-300/30 transition-all shadow-2xs"
+                      />
+                      {auditSearch && (
+                        <button
+                          id="audit-log-search-clear-btn"
+                          type="button"
+                          onClick={() => setAuditSearch("")}
+                          className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1 rounded-full hover:bg-slate-200 cursor-pointer transition-colors"
+                          title="Clear search"
+                        >
+                          <X className="w-3.5 h-3.5" />
+                        </button>
+                      )}
+                    </div>
+                  </div>
                 </div>
               </header>
 
