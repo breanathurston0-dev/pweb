@@ -1941,33 +1941,33 @@ export default function App() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div onClick={() => { setSelectedCategory("Programming"); setView("courses"); }} className="bg-white border border-slate-200 hover:border-slate-400 p-6 rounded-2xl shadow-sm transition-all hover:scale-102 cursor-pointer flex items-center gap-4">
-                  <div className="bg-blue-50 text-blue-600 p-4 rounded-xl">
-                    <BookOpen className="w-6 h-6" />
+                <div onClick={() => { setSelectedCategory("AI Development"); setView("courses"); }} className="bg-white border border-slate-200 hover:border-slate-400 p-6 rounded-2xl shadow-sm transition-all hover:scale-102 cursor-pointer flex items-center gap-4 dark:bg-slate-900 dark:border-slate-800">
+                  <div className="bg-blue-50 text-blue-600 dark:bg-blue-950/50 dark:text-blue-400 p-4 rounded-xl">
+                    <Sparkles className="w-6 h-6" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-slate-900 text-sm leading-tight">{t("programming")}</h4>
-                    <span className="text-xs text-slate-400 mt-1 block">Learn React, Typescript, JS</span>
+                    <h4 className="font-bold text-slate-900 dark:text-white text-sm leading-tight">{lang === "en" ? "BUILD SOFTWARE WITH AI" : "បង្កើតសូហ្វវែរជាមួយ AI"}</h4>
+                    <span className="text-xs text-slate-400 mt-1 block">{lang === "en" ? "AI coding workflows, Cursor & full-stack apps" : "ស្ទាត់ជំនាញបង្កើតសូហ្វវែរជាមួយ AI"}</span>
                   </div>
                 </div>
 
-                <div onClick={() => { setSelectedCategory("Backend Development"); setView("courses"); }} className="bg-white border border-slate-200 hover:border-slate-400 p-6 rounded-2xl shadow-sm transition-all hover:scale-102 cursor-pointer flex items-center gap-4">
-                  <div className="bg-emerald-50 text-emerald-600 p-4 rounded-xl">
-                    <Tv className="w-6 h-6" />
+                <div onClick={() => { setSelectedCategory("Account Security"); setView("courses"); }} className="bg-white border border-slate-200 hover:border-slate-400 p-6 rounded-2xl shadow-sm transition-all hover:scale-102 cursor-pointer flex items-center gap-4 dark:bg-slate-900 dark:border-slate-800">
+                  <div className="bg-emerald-50 text-emerald-600 dark:bg-emerald-950/50 dark:text-emerald-400 p-4 rounded-xl">
+                    <Shield className="w-6 h-6" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-slate-900 text-sm leading-tight">{t("backendDevelopment")}</h4>
-                    <span className="text-xs text-slate-400 mt-1 block">Learn Node, Express, Databases</span>
+                    <h4 className="font-bold text-slate-900 dark:text-white text-sm leading-tight">{lang === "en" ? "SCAN ACCOUNT PRIME" : "ស្កេនគណនី PRIME"}</h4>
+                    <span className="text-xs text-slate-400 mt-1 block">{lang === "en" ? "Prime diagnostics, 2FA & account audits" : "ស្កេនពិនិត្យ និងការពារសុវត្ថិភាពគណនី Prime"}</span>
                   </div>
                 </div>
 
-                <div onClick={() => { setSelectedCategory("Design"); setView("courses"); }} className="bg-white border border-slate-200 hover:border-slate-400 p-6 rounded-2xl shadow-sm transition-all hover:scale-102 cursor-pointer flex items-center gap-4">
-                  <div className="bg-purple-50 text-purple-600 p-4 rounded-xl">
-                    <Award className="w-6 h-6" />
+                <div onClick={() => { setSelectedCategory("Online Business"); setView("courses"); }} className="bg-white border border-slate-200 hover:border-slate-400 p-6 rounded-2xl shadow-sm transition-all hover:scale-102 cursor-pointer flex items-center gap-4 dark:bg-slate-900 dark:border-slate-800">
+                  <div className="bg-purple-50 text-purple-600 dark:bg-purple-950/50 dark:text-purple-400 p-4 rounded-xl">
+                    <TrendingUp className="w-6 h-6" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-slate-900 text-sm leading-tight">{t("design")}</h4>
-                    <span className="text-xs text-slate-400 mt-1 block">Learn Figma UI, CSS styles</span>
+                    <h4 className="font-bold text-slate-900 dark:text-white text-sm leading-tight">{lang === "en" ? "MMO (Make Money Online)" : "រកប្រាក់តាមអនឡាញ MMO"}</h4>
+                    <span className="text-xs text-slate-400 mt-1 block">{lang === "en" ? "Affiliate, funnels & digital monetization" : "យុទ្ធសាស្ត្ររកចំណូល និងពង្រីកទីផ្សារឌីជីថល"}</span>
                   </div>
                 </div>
               </div>
@@ -2265,17 +2265,23 @@ export default function App() {
 
               {/* Categorization Selection Tab items */}
               <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
-                {["All", "Programming", "Backend Development", "Design"].map((cat) => (
+                {["All", "AI Development", "Account Security", "Online Business"].map((cat) => (
                   <button
                     key={cat}
                     onClick={() => setSelectedCategory(cat)}
                     className={`px-3.5 py-1.5 text-xs font-semibold rounded-xl transition-all cursor-pointer ${
                       selectedCategory === cat 
-                        ? "bg-slate-900 text-white" 
-                        : "bg-slate-50 hover:bg-slate-200 text-slate-700"
+                        ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900" 
+                        : "bg-slate-50 hover:bg-slate-200 text-slate-700 dark:bg-slate-800 dark:text-slate-300"
                     }`}
                   >
-                    {cat === "All" ? (lang === "en" ? "All" : "ទាំងអស់") : (lang === "en" ? cat : cat)}
+                    {cat === "All" 
+                      ? (lang === "en" ? "All" : "ទាំងអស់") 
+                      : cat === "AI Development"
+                      ? (lang === "en" ? "AI Development" : "បច្ចេកវិទ្យា AI")
+                      : cat === "Account Security"
+                      ? (lang === "en" ? "Account Security" : "សុវត្ថិភាពគណនី")
+                      : (lang === "en" ? "MMO & Business" : "រកប្រាក់តាមអនឡាញ MMO")}
                   </button>
                 ))}
               </div>

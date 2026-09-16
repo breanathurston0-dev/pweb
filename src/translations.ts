@@ -38,6 +38,9 @@ export const translations: TranslationDictionary = {
   programming: { en: "Programming", km: "សរសេរកូដ" },
   backendDevelopment: { en: "Backend Development", km: "ផ្នែកម៉ាស៊ីនបម្រើ" },
   design: { en: "UI/UX Design", km: "រចនាប្លង់កម្មវិធី" },
+  aiDevelopment: { en: "AI Software Development", km: "បច្ចេកវិទ្យា AI & កូដ" },
+  accountSecurity: { en: "Account Security & Scanning", km: "សុវត្ថិភាពគណនី & ស្កេន" },
+  mmoBusiness: { en: "MMO (Make Money Online)", km: "រកប្រាក់តាមអនឡាញ MMO" },
 
   // Course Cards & Details
   popular: { en: "Popular", km: "ពេញនិយម" },
