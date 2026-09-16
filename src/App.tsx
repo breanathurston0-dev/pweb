@@ -19,6 +19,7 @@ import { useTheme } from "./hooks/useTheme.ts";
 import AIAssistant from "./components/AIAssistant.tsx";
 import VerificationModal from "./components/CertificationModal.tsx";
 import VideoPlayer from "./components/VideoPlayer.tsx";
+import { BuildSoftwareWithAiShowcase } from "./components/BuildSoftwareWithAiShowcase.tsx";
 import proSanImage from "./assets/images/pro_san.jpg";
 
 export const ABA_PAYWAY_URL = "https://link.payway.com.kh/aba?id=18E2ED0EE307&code=461423&acc=002292898&dynamic=true";
@@ -1941,32 +1942,32 @@ export default function App() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div onClick={() => { setSelectedCategory("AI Development"); setView("courses"); }} className="bg-white border border-slate-200 hover:border-slate-400 p-6 rounded-2xl shadow-sm transition-all hover:scale-102 cursor-pointer flex items-center gap-4 dark:bg-slate-900 dark:border-slate-800">
-                  <div className="bg-blue-50 text-blue-600 dark:bg-blue-950/50 dark:text-blue-400 p-4 rounded-xl">
+                <div onClick={() => { setSelectedCourseId("c-1"); setView("course-detail"); }} className="bg-white border border-slate-200 hover:border-slate-400 p-6 rounded-2xl shadow-sm transition-all hover:scale-102 cursor-pointer flex items-center gap-4 dark:bg-slate-900 dark:border-slate-800 group">
+                  <div className="bg-blue-50 text-blue-600 dark:bg-blue-950/50 dark:text-blue-400 p-4 rounded-xl group-hover:bg-blue-600 group-hover:text-white transition-colors">
                     <Sparkles className="w-6 h-6" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-slate-900 dark:text-white text-sm leading-tight">{lang === "en" ? "BUILD SOFTWARE WITH AI" : "បង្កើតសូហ្វវែរជាមួយ AI"}</h4>
-                    <span className="text-xs text-slate-400 mt-1 block">{lang === "en" ? "AI coding workflows, Cursor & full-stack apps" : "ស្ទាត់ជំនាញបង្កើតសូហ្វវែរជាមួយ AI"}</span>
+                    <h4 className="font-bold text-slate-900 dark:text-white text-sm leading-tight group-hover:text-blue-600 transition-colors">{lang === "en" ? "BUILD SOFTWARE WITH AI" : "បង្កើតសូហ្វវែរជាមួយ AI"}</h4>
+                    <span className="text-xs text-slate-400 mt-1 block">{lang === "en" ? "4 steps: Basics, AI Tools, Projects, Deploy" : "៤ ជំហាន៖ មូលដ្ឋានគ្រឹះ, ជំនួយការ AI, គម្រោង, Cloud"}</span>
                   </div>
                 </div>
 
-                <div onClick={() => { setSelectedCategory("Account Security"); setView("courses"); }} className="bg-white border border-slate-200 hover:border-slate-400 p-6 rounded-2xl shadow-sm transition-all hover:scale-102 cursor-pointer flex items-center gap-4 dark:bg-slate-900 dark:border-slate-800">
-                  <div className="bg-emerald-50 text-emerald-600 dark:bg-emerald-950/50 dark:text-emerald-400 p-4 rounded-xl">
+                <div onClick={() => { setSelectedCourseId("c-2"); setView("course-detail"); }} className="bg-white border border-slate-200 hover:border-slate-400 p-6 rounded-2xl shadow-sm transition-all hover:scale-102 cursor-pointer flex items-center gap-4 dark:bg-slate-900 dark:border-slate-800 group">
+                  <div className="bg-emerald-50 text-emerald-600 dark:bg-emerald-950/50 dark:text-emerald-400 p-4 rounded-xl group-hover:bg-emerald-600 group-hover:text-white transition-colors">
                     <Shield className="w-6 h-6" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-slate-900 dark:text-white text-sm leading-tight">{lang === "en" ? "SCAN ACCOUNT PRIME" : "ស្កេនគណនី PRIME"}</h4>
+                    <h4 className="font-bold text-slate-900 dark:text-white text-sm leading-tight group-hover:text-emerald-600 transition-colors">{lang === "en" ? "SCAN ACCOUNT PRIME" : "ស្កេនគណនី PRIME"}</h4>
                     <span className="text-xs text-slate-400 mt-1 block">{lang === "en" ? "Prime diagnostics, 2FA & account audits" : "ស្កេនពិនិត្យ និងការពារសុវត្ថិភាពគណនី Prime"}</span>
                   </div>
                 </div>
 
-                <div onClick={() => { setSelectedCategory("Online Business"); setView("courses"); }} className="bg-white border border-slate-200 hover:border-slate-400 p-6 rounded-2xl shadow-sm transition-all hover:scale-102 cursor-pointer flex items-center gap-4 dark:bg-slate-900 dark:border-slate-800">
-                  <div className="bg-purple-50 text-purple-600 dark:bg-purple-950/50 dark:text-purple-400 p-4 rounded-xl">
+                <div onClick={() => { setSelectedCourseId("c-3"); setView("course-detail"); }} className="bg-white border border-slate-200 hover:border-slate-400 p-6 rounded-2xl shadow-sm transition-all hover:scale-102 cursor-pointer flex items-center gap-4 dark:bg-slate-900 dark:border-slate-800 group">
+                  <div className="bg-purple-50 text-purple-600 dark:bg-purple-950/50 dark:text-purple-400 p-4 rounded-xl group-hover:bg-purple-600 group-hover:text-white transition-colors">
                     <TrendingUp className="w-6 h-6" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-slate-900 dark:text-white text-sm leading-tight">{lang === "en" ? "MMO (Make Money Online)" : "រកប្រាក់តាមអនឡាញ MMO"}</h4>
+                    <h4 className="font-bold text-slate-900 dark:text-white text-sm leading-tight group-hover:text-purple-600 transition-colors">{lang === "en" ? "MMO (Make Money Online)" : "រកប្រាក់តាមអនឡាញ MMO"}</h4>
                     <span className="text-xs text-slate-400 mt-1 block">{lang === "en" ? "Affiliate, funnels & digital monetization" : "យុទ្ធសាស្ត្ររកចំណូល និងពង្រីកទីផ្សារឌីជីថល"}</span>
                   </div>
                 </div>
@@ -2445,6 +2446,23 @@ export default function App() {
                     {lang === "en" ? selectedCourseDetail.description : selectedCourseDetail.descriptionKh}
                   </p>
                 </div>
+
+                {/* Dedicated Interactive Showcase for BUILD SOFTWARE WITH AI */}
+                {(selectedCourseDetail.id === "c-1" || selectedCourseDetail.title.includes("BUILD SOFTWARE WITH AI")) && (
+                  <BuildSoftwareWithAiShowcase
+                    lang={lang}
+                    onEnroll={() => handleInitiateCheckout(selectedCourseDetail.id)}
+                    onPreviewLesson={() => {
+                      const previewLesson = lessons.find(l => l.isPreview) || lessons[0];
+                      setHdPreviewModal({
+                        isOpen: true,
+                        videoUrl: previewLesson?.videoUrl || "https://www.w3schools.com/html/mov_bbb.mp4",
+                        title: `${lang === "en" ? selectedCourseDetail.title : selectedCourseDetail.titleKh} (HD 1080p Preview)`,
+                        poster: selectedCourseDetail.thumbnail
+                      });
+                    }}
+                  />
+                )}
 
                 {/* Course Instructor Profile Card */}
                 <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-5 flex items-center gap-4 shadow-2xs">
