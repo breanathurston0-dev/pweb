@@ -1667,6 +1667,13 @@ export default function App() {
             <button onClick={() => setView("contact")} className={`hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer ${view === "contact" ? "text-slate-950 dark:text-white underline underline-offset-4" : ""}`}>
               {t("contact")}
             </button>
+            <button 
+              onClick={() => { setSelectedCourseId("c-1"); setView("course-detail"); }} 
+              className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-gradient-to-r from-blue-600/10 to-cyan-500/10 hover:from-blue-600/20 hover:to-cyan-500/20 text-blue-600 dark:text-cyan-400 border border-blue-500/25 dark:border-cyan-500/30 transition-all cursor-pointer shadow-2xs"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-blue-600 dark:text-cyan-400 animate-pulse" />
+              <span>{lang === "en" ? "Build with AI" : "បង្កើតជាមួយ AI"}</span>
+            </button>
           </nav>
         </div>
 
@@ -1768,6 +1775,10 @@ export default function App() {
           >
             <button onClick={() => { setView("home"); setMobileMenuOpen(false); }} className="text-left py-2 border-b border-slate-50 cursor-pointer">{t("home")}</button>
             <button onClick={() => { setView("courses"); setMobileMenuOpen(false); }} className="text-left py-2 border-b border-slate-50 cursor-pointer">{t("courses")}</button>
+            <button onClick={() => { setSelectedCourseId("c-1"); setView("course-detail"); setMobileMenuOpen(false); }} className="flex items-center gap-2 text-left py-2 border-b border-slate-50 text-blue-600 dark:text-cyan-400 font-bold cursor-pointer">
+              <Sparkles className="w-4 h-4 text-blue-500 dark:text-cyan-400" />
+              <span>{lang === "en" ? "Build Software with AI" : "បង្កើតសូហ្វវែរជាមួយ AI"}</span>
+            </button>
             <button onClick={() => { setView("about"); setMobileMenuOpen(false); }} className="text-left py-2 border-b border-slate-50 cursor-pointer">{t("about")}</button>
             <button onClick={() => { setView("contact"); setMobileMenuOpen(false); }} className="text-left py-2 border-b border-slate-50 cursor-pointer">{t("contact")}</button>
             
@@ -1834,6 +1845,13 @@ export default function App() {
                     >
                       <span>{t("startLearning")}</span>
                       <ArrowRight className="w-5 h-5 text-white" />
+                    </button>
+                    <button
+                      onClick={() => { setSelectedCourseId("c-1"); setView("course-detail"); }}
+                      className="flex items-center gap-2 bg-gradient-to-r from-cyan-500/20 via-blue-600/20 to-indigo-500/20 hover:from-cyan-500/30 hover:to-blue-600/30 text-cyan-300 border border-cyan-500/40 font-bold py-3.5 px-6 rounded-2xl transition-all hover:scale-103 cursor-pointer shadow-lg shadow-cyan-500/10 backdrop-blur-sm"
+                    >
+                      <Sparkles className="w-4 h-4 text-cyan-400" />
+                      <span>{lang === "en" ? "Build Software with AI" : "បង្កើតសូហ្វវែរជាមួយ AI"}</span>
                     </button>
                     <button
                       onClick={() => { setAuthMode("register"); setShowAuthModal(true); }}
